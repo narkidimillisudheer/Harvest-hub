@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+
 function AddCropForm() {
+  const [id, setId] = useState("");
   const [formData, setFormData] = useState({
     cropName: "",
     quantity: "",
     price: "",
     file: null,
+    id: "",
   });
+  const fetchData = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const decodedToken = jwtDecode(token);
+      const id = decodedToken.id;
+      console.log(id);
+      setId(id);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
   const handleChange = (e) => {
     if (e.target.type === "file") {
       setFormData({ ...formData, file: e.target.files[0] });
@@ -24,6 +42,7 @@ function AddCropForm() {
       formDataToSend.append("quantity", formData.quantity);
       formDataToSend.append("price", formData.price);
       formDataToSend.append("file", formData.file);
+      formDataToSend.append("id", id);
 
       await axios.post("http://localhost:3001/addCrop", formDataToSend, {
         headers: {
@@ -37,9 +56,16 @@ function AddCropForm() {
     }
   };
   return (
-    <div className="card">
+    <>
       <style>
         {`
+          .main9324{
+            height:60vh;
+            width:1280px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+          }
           .card {
             border: 1px solid #ccc;
             border-radius: 8px;
@@ -80,61 +106,64 @@ function AddCropForm() {
           }
         `}
       </style>
-
-      <div className="formContainer">
-        <h2>Add Your Product</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="cropName">Product Name:</label>
-            <input
-              type="text"
-              id="cropName"
-              name="cropName"
-              placeholder="Enter product Name"
-              value={formData.cropName}
-              onChange={handleChange}
-              required
-            />
+      <div className="main9324">
+        <div className="card">
+          <div className="formContainer">
+            <h2>Add Your Product</h2>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="cropName">Product Name:</label>
+                <input
+                  type="text"
+                  id="cropName"
+                  name="cropName"
+                  placeholder="Enter product Name"
+                  value={formData.cropName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="quantity">Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  name="quantity"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  required
+                  placeholder="in KG'S"
+                />
+              </div>
+              <div>
+                <label htmlFor="price">price per Kg:</label>
+                <input
+                  type="number"
+                  id="price"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  required
+                  placeholder="Price per kg"
+                />
+              </div>
+              <div>
+                <label htmlFor="image">Image:</label>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  name="file"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <button type="submit">Add</button>
+            </form>
           </div>
-          <div>
-            <label htmlFor="quantity">Quantity:</label>
-            <input
-              type="number"
-              id="quantity"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              required
-              placeholder="in KG'S"
-            />
-          </div>
-          <div>
-            <label htmlFor="price">price per Kg:</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              required
-              placeholder="Price per kg"
-            />
-          </div>
-          <div>
-            <label htmlFor="image">Image:</label>
-            <input
-              type="file"
-              id="image"
-              accept="image/*"
-              name="file"
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <button type="submit">Add</button>
-        </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

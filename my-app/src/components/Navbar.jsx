@@ -4,14 +4,14 @@ import './bootstrap.min.css'
 import './navbar.css'
 import { jwtDecode } from 'jwt-decode';
 import {Link, useLocation } from 'react-router-dom';
-
+import {  useNavigate } from 'react-router-dom';
 function Navbar() {
   const [username, setUsername] = useState('');
   const [farmerName, setFarmerName] = useState('');
   const [adminName, setadminName] = useState('');
   const [userType, setUserType] = useState('');
   const location = useLocation();
-
+  const navigate = useNavigate();
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -31,6 +31,16 @@ function Navbar() {
       
     }
   }, [location.pathname]);
+  const adminHandleLogout = () => {
+    // Clear data in localStorage
+    sessionStorage.removeItem('token');
+    navigate('/adminlogin');
+  };
+  const farmerHandleLogout = () => {
+    // Clear data in localStorage
+    sessionStorage.removeItem('token');
+    navigate('/farmerLogin');
+  };
   const homeNavbar = (
     <>
       <Link to="/" className={`nav-item nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
@@ -44,20 +54,23 @@ function Navbar() {
     <>
       <p>Welcome, {username}!</p>
       {/* Add elements specific to the about route */}
+      
     </>
   );
 
   const adminPage = (
     <>
-    <h4>Welcome, {adminName}</h4>
+    <h4>Welcome, {adminName}</h4>&emsp;&emsp;
       {/* Add elements specific to the contact route */}
+      <button onClick={adminHandleLogout} class="btn btn-danger">Logout</button>
     </>
   );
   //farmer page
   const farmerPage = (
     <>
-    <h4>Welcome, {farmerName}</h4>
+    <h4>Welcome, {farmerName}</h4>&emsp;&emsp;
       {/* Add elements specific to the contact route */}
+      <button onClick={farmerHandleLogout} class="btn btn-danger">Logout</button>
     </>
   );
   // Render different navbar elements based on the current route

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import WeatherCard from '../weather/WeatherCard';
 import AddCropForm from '../weather/AddCropForm';
 import Ml from '../../Ml';
+import Mycrops from '../weather/Mycrops';
 import Navbar from '../Navbar';
 import Topbar from '../Topbar';
 function Farm() {
@@ -20,7 +21,7 @@ function Farm() {
       case 'disease':
         return <div><center><Ml /></center></div>;
       case 'crops':
-        return <div>My crops functionality goes here</div>;
+        return <div><Mycrops/></div>;
       default:
         return <div>Welcome! Please select an option from the menu.</div>;
     }

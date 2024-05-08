@@ -3,7 +3,9 @@ import axios from 'axios';
 // import Navbar from '../Navbar';
 import Topbar from '../Topbar';
 import { jwtDecode } from 'jwt-decode';
-import {Link, useLocation } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 function CropCard({ crop ,addToCart}) {
   const [quantity, setQuantity] = useState(0); // State to manage quantity value
 
@@ -143,7 +145,7 @@ function CropCard({ crop ,addToCart}) {
 
 function UserHomePage() {
   const [crops, setCrops] = useState([]);
-
+  
   useEffect(() => {
     // Fetch crop data from backend when component mounts
     async function fetchData() {
@@ -256,7 +258,7 @@ function UserHomePage() {
       <div className="cart-popup">
         <div className="cart-header">
           <h2>Your Cart</h2>
-          <button onClick={() => setShowCart(false)}>Close</button>
+          <button class="btn btn-outline-secondary close-btn" onClick={() => setShowCart(false)}>Close</button>
         </div>
         <div className="cart-items">
           {cart.length === 0 ? (
@@ -289,12 +291,27 @@ function UserHomePage() {
       // Make a POST request to your backend endpoint with the cart data
       const response = await axios.post('http://localhost:3001/api/submit-cart', { cart });
       console.log('Cart submitted successfully:', response.data);
-      alert("succesfully");
+      // alert("your items are successfully placed for order");
+      Swal.fire({
+        title: 'Congratulations!',
+        text: 'Your order is successfullty placed',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
       // Clear the cart after submitting
       setCart([]);
     } catch (error) {
       console.error('Error submitting cart:', error);
     }
+  };
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Clear data in localStorage
+    sessionStorage.removeItem('token');
+    // localStorage.removeItem('username');
+    
+    // Redirect to appropriate page
+    navigate('/login'); // Redirect to the login page
   };
   return (
     <>
@@ -307,8 +324,9 @@ function UserHomePage() {
         <div className="navbar-nav ms-auto p-4 p-lg-0">
         
         <h4>Welcome, {username}</h4>
-        &nbsp;
-        <Link><a href="#" onClick={() => setShowCart(true)}>View Cart</a></Link>
+        &emsp;
+        <button  class="btn btn-primary" onClick={() => setShowCart(true)}>View Cart</button>&emsp;
+        <button onClick={handleLogout} class="btn btn-danger">Logout</button>
         </div>
        
       </div>

@@ -38,8 +38,10 @@ const formStyle = {
   textAlign: "center",
   margin: "20px auto",
   padding: "20px",
-
   borderRadius: "5px",
+  height: "60vh",
+  width: "1280px",
+  display: "flex",
 };
 
 const headerStyle = {

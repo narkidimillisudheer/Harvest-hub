@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 function WeatherCard() {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
   const [location, setLocation] = useState("Bhimavaram");
   const API_KEY = "4520a4515356cd2c078c89a4d45ce5a6";
   const API_ENDPOINT_URL = "https://api.openweathermap.org/data/2.5";
+  const fetchData = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const decodedToken = jwtDecode(token);
+      const id = decodedToken.id;
+      const response = await axios.get(
+        `http://localhost:3001/farmerHome/weather/${id}`
+      );
+      console.log(response.data);
+      setLocation(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
@@ -61,7 +79,7 @@ function WeatherCard() {
     background-image: url('https://images.pexels.com/photos/1154510/pexels-photo-1154510.jpeg?auto=compress&cs=tinysrgb&w=600');
     background-size: cover;
     background-position: center;
-    height: 100vh;
+    height: 80vh;
     width : 1260px;
     font-family: Arial, sans-serif;
     color: white; 

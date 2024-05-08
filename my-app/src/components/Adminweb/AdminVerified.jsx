@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../Navbar';
 const CardComponent = ({ data, fetchData }) => {
 
   const handleView = async () => {
@@ -74,7 +73,7 @@ const CardComponent = ({ data, fetchData }) => {
   );
 };
 
-const AdminHome = () => {
+const AdminVerified = () => {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -102,4 +101,4 @@ const AdminHome = () => {
   );
 };
 
-export default AdminHome;
+export default AdminVerified;
